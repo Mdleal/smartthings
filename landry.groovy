@@ -44,7 +44,7 @@ preferences {
 
   section ("Additionally", hidden: hideOptionsSection(), hideable: true) {
     input "phone", "phone", title: "Send a text message to:", required: false
-    input "switches", "capability.switch", title: "Turn on this switch", required:false, multiple:true
+    input "switches", "capability.switch", title: "Turn on/off this switch", required:false, multiple:true
     //input "hues", "capability.colorControl", title: "Turn these hue bulbs", required:false, multiple:true
     //input "color", "enum", title: "This color", required: false, multiple:false, options: ["White", "Red","Green","Blue","Yellow","Orange","Purple","Pink"]
     //input "lightLevel", "enum", title: "This light Level", required: false, options: [[10:"10%"],[20:"20%"],[30:"30%"],[40:"40%"],[50:"50%"],[60:"60%"],[70:"70%"],[80:"80%"],[90:"90%"],[100:"100%"]]
@@ -86,6 +86,8 @@ def handler(evt) {
 private cycleOn(evc) {
     state.cycleOn = true
     log.trace "Cycle started."
+	log.trace "Virtual switch on."
+	switches.on()
 }
 
 def cycleOff(evt) {
@@ -96,7 +98,8 @@ def cycleOff(evt) {
     if (state.cycleOn && latestPower <= cycle_end_power_threshold) {
         state.cycleOn = false
         log.trace "Cycle ended."
-
+		log.trace "Virtual switch off."
+		switches.off()	
         send(message)
         //lightAlert(evt)
         //speechAlert(evt)
